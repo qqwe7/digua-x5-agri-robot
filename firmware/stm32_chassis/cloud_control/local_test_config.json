@@ -1,0 +1,10 @@
+{
+  "bind": "127.0.0.1",
+  "http_port": 8080,
+  "tcp_port": 9000,
+  "token": "localcar",
+  "serial_port": "COM11",
+  "serial_baud": 115200,
+  "open_browser": true,
+  "browser_url": ""
+}

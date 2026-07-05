@@ -1,0 +1,30 @@
+{
+  "frame_id": "map",
+  "notes": "Replace these sample poses with measured map-frame poses near plants 1-4. Goal pose is for base_link/base_footprint.",
+  "plants": {
+    "1": {
+      "name": "plant_1",
+      "x": 0.0,
+      "y": 0.0,
+      "yaw_deg": 0.0
+    },
+    "2": {
+      "name": "plant_2",
+      "x": 0.0,
+      "y": 0.0,
+      "yaw_deg": 0.0
+    },
+    "3": {
+      "name": "plant_3",
+      "x": 0.0,
+      "y": 0.0,
+      "yaw_deg": 0.0
+    },
+    "4": {
+      "name": "plant_4",
+      "x": 0.0,
+      "y": 0.0,
+      "yaw_deg": 0.0
+    }
+  }
+}

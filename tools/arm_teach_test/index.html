@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>机械臂示教测试台</title>
+  <style>
+    :root {
+      --bg: #eef2f0;
+      --panel: #ffffff;
+      --text: #18221e;
+      --muted: #62706a;
+      --line: #d6ded9;
+      --green: #1f7a4d;
+      --blue: #246a9b;
+      --red: #b83f3b;
+      --amber: #a96d16;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #f7f9f8 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    .app { min-height: 100vh; padding: 18px; }
+    .top {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin: 0 auto 14px;
+      max-width: 1180px;
+    }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    .sub { color: var(--muted); font-size: 13px; }
+    .status {
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: flex;
+      gap: 10px;
+      padding: 10px 12px;
+      white-space: nowrap;
+    }
+    .dot { background: var(--red); border-radius: 999px; height: 9px; width: 9px; }
+    .dot.on { background: var(--green); }
+    .layout {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      margin: 0 auto;
+      max-width: 1180px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(20, 31, 26, .07);
+      padding: 14px;
+    }
+    .panel-title {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .panel-title b { font-size: 15px; }
+    .panel-title span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+    .serial-row {
+      align-items: end;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: minmax(0, 1fr) 120px auto auto;
+      margin-bottom: 12px;
+    }
+    label { color: var(--muted); display: block; font-size: 12px; font-weight: 800; margin-bottom: 5px; }
+    input, select {
+      background: #fbfcfb;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      height: 40px;
+      padding: 0 10px;
+      width: 100%;
+    }
+    .btn {
+      align-items: center;
+      background: var(--green);
+      border-radius: 8px;
+      color: #fff;
+      display: inline-flex;
+      font-weight: 800;
+      height: 40px;
+      justify-content: center;
+      padding: 0 14px;
+    }
+    .btn.blue { background: var(--blue); }
+    .btn.red { background: var(--red); }
+    .btn.gray { background: #51605a; }
+    .btn.amber { background: var(--amber); }
+    .jog-toolbar {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .step {
+      align-items: center;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: auto 100px auto;
+    }
+    .joint-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .joint {
+      background: #f8faf9;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .joint-head {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .joint-head span { color: var(--muted); font-size: 12px; font-weight: 900; }
+    .joint-head b { font-size: 18px; }
+    .joint-actions { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+    .jbtn {
+      background: #e9efec;
+      border: 1px solid #c8d3cd;
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 26px;
+      font-weight: 900;
+      height: 58px;
+    }
+    .jbtn:hover { background: #dff0e7; border-color: var(--green); }
+    .save-box { display: grid; gap: 10px; }
+    .pos-list { display: grid; gap: 6px; margin: 12px 0; }
+    .pos-row {
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+    }
+    .pos-row span { color: var(--muted); font-size: 12px; font-weight: 900; }
+    .log {
+      background: #17211c;
+      border-radius: 8px;
+      color: #dce8e1;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      margin: 0;
+      min-height: 220px;
+      overflow: auto;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+    .hint {
+      background: #fff7e7;
+      border: 1px solid #efd7a8;
+      border-radius: 8px;
+      color: #6d4a12;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      padding: 10px;
+    }
+    @media (max-width: 940px) {
+      .layout { grid-template-columns: 1fr; }
+      .joint-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .serial-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .top { align-items: stretch; flex-direction: column; }
+      .joint-grid, .serial-row { grid-template-columns: 1fr; }
+      .jog-toolbar { align-items: stretch; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <div>
+        <h1>机械臂示教测试台</h1>
+        <div class="sub">独立测试版：保存复位点，点动到目标位，teach save1，本地断电不丢。</div>
+      </div>
+      <div class="status"><i class="dot" id="connDot"></i><span id="connText">串口未连接，本地模拟</span></div>
+    </header>
+
+    <section class="layout">
+      <div class="panel">
+        <div class="panel-title"><span>SERIAL</span><b>串口连接</b></div>
+        <div class="serial-row">
+          <div>
+            <label for="portSelect">COM 口</label>
+            <select id="portSelect"></select>
+          </div>
+          <div>
+            <label for="baudrate">波特率</label>
+            <input id="baudrate" type="number" value="115200" />
+          </div>
+          <button class="btn blue" id="connectBtn">连接</button>
+          <button class="btn gray" id="disconnectBtn">断开</button>
+        </div>
+
+        <div class="panel-title"><span>JOG</span><b>关节点动</b></div>
+        <div class="hint">流程：上电自动复位后先点“保存当前复位点”；再点动到目标位置，点 teach save1；之后点“回到复位点”，再点“执行 save1”。</div>
+        <div class="jog-toolbar">
+          <div class="step">
+            <label for="stepDeg">点动角度</label>
+            <input id="stepDeg" type="number" value="5" min="0.1" max="45" step="0.1" />
+            <span>deg</span>
+          </div>
+          <button class="btn blue" id="readBtn">读取当前位置</button>
+          <button class="btn red" id="stopBtn">急停</button>
+        </div>
+        <div class="joint-grid" id="jointGrid"></div>
+      </div>
+
+      <aside class="panel">
+        <div class="panel-title"><span>TEACH</span><b>保存点位</b></div>
+        <div class="save-box">
+          <label for="pointName">点位名称</label>
+          <input id="pointName" value="save1" />
+          <button class="btn blue" id="saveResetBtn">保存当前复位点</button>
+          <button class="btn" id="saveBtn">teach save1</button>
+          <button class="btn gray" id="zeroBtn">回到复位点</button>
+          <button class="btn amber" id="gotoBtn">执行 save1</button>
+        </div>
+        <div class="pos-list" id="posList"></div>
+        <div class="panel-title"><span>LOG</span><b>命令记录</b></div>
+        <pre class="log" id="logBox"></pre>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    if (location.protocol === 'file:') {
+      location.replace('http://127.0.0.1:8790/');
+    }
+
+    let state = { joints: {}, saved_points: {}, logs: [], serial: {} };
+    const $ = (id) => document.getElementById(id);
+
+    async function api(path, options = {}) {
+      const res = await fetch(path, {
+        ...options,
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || res.statusText);
+      return data;
+    }
+
+    function stepValue() {
+      const value = Number($('stepDeg').value || 5);
+      return Number.isFinite(value) ? Math.max(0.1, Math.min(45, value)) : 5;
+    }
+
+    function render() {
+      const serial = state.serial || {};
+      $('connDot').classList.toggle('on', Boolean(serial.connected));
+      $('connText').textContent = serial.connected ? `串口已连接 ${serial.port}` : '串口未连接，本地模拟';
+
+      const ports = state.ports || [];
+      const current = $('portSelect').value || serial.port || ports[0] || '';
+      $('portSelect').innerHTML = ports.length
+        ? ports.map((port) => `<option value="${port}">${port}</option>`).join('')
+        : '<option value="">未发现串口</option>';
+      $('portSelect').value = current;
+
+      const joints = state.joints || {};
+      $('jointGrid').innerHTML = Array.from({ length: 6 }, (_, index) => {
+        const id = String(index + 1);
+        const value = Number(joints[id] || 0).toFixed(1);
+        return `
+          <article class="joint">
+            <div class="joint-head"><span>Joint ${id}</span><b>${value}°</b></div>
+            <div class="joint-actions">
+              <button class="jbtn" data-joint="${id}" data-dir="-1">-</button>
+              <button class="jbtn" data-joint="${id}" data-dir="1">+</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+      document.querySelectorAll('[data-joint]').forEach((btn) => {
+        btn.onclick = () => jog(btn.dataset.joint, Number(btn.dataset.dir));
+      });
+
+      $('posList').innerHTML = Array.from({ length: 6 }, (_, index) => {
+        const id = String(index + 1);
+        return `<div class="pos-row"><span>J${id}</span><b>${Number(joints[id] || 0).toFixed(1)}°</b></div>`;
+      }).join('');
+
+      $('logBox').textContent = (state.logs || []).slice().reverse()
+        .map((item) => `[${item.time}] ${item.message}`)
+        .join('\n') || '等待操作...';
+    }
+
+    function showError(message) {
+      state.logs = [
+        ...(state.logs || []),
+        { time: new Date().toLocaleString('zh-CN', { hour12: false }), message: `错误: ${message}` },
+      ];
+      render();
+    }
+
+    async function refresh() {
+      state = await api('/api/state');
+      render();
+    }
+
+    async function readPositions() {
+      const data = await api('/api/read-positions', { method: 'POST', body: '{}' });
+      state = { ...data.state, ports: state.ports };
+      render();
+    }
+
+    async function jog(joint, dir) {
+      const delta = stepValue() * dir;
+      const data = await api('/api/jog', { method: 'POST', body: JSON.stringify({ joint, delta }) });
+      state = { ...data.state, ports: state.ports };
+      render();
+    }
+
+    $('connectBtn').onclick = async () => {
+      try {
+        const data = await api('/api/connect', {
+          method: 'POST',
+          body: JSON.stringify({ port: $('portSelect').value, baudrate: Number($('baudrate').value || 115200) }),
+        });
+        state = { ...data.state, ports: state.ports };
+        await refresh();
+        await readPositions();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    $('readBtn').onclick = async () => {
+      try {
+        await readPositions();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    $('disconnectBtn').onclick = async () => {
+      try {
+        const data = await api('/api/disconnect', { method: 'POST', body: '{}' });
+        state = { ...data.state, ports: state.ports };
+        await refresh();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    $('stopBtn').onclick = async () => {
+      try {
+        const data = await api('/api/stop', { method: 'POST', body: '{}' });
+        state = { ...data.state, ports: state.ports };
+        render();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    $('zeroBtn').onclick = async () => {
+      try {
+        const data = await api('/api/reset-current', { method: 'POST', body: '{}' });
+        state = { ...data.state, ports: state.ports };
+        render();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    $('saveResetBtn').onclick = async () => {
+      try {
+        const data = await api('/api/save-reset-point', { method: 'POST', body: '{}' });
+        state = { ...data.state, ports: state.ports };
+        render();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    $('saveBtn').onclick = async () => {
+      try {
+        const name = $('pointName').value.trim() || 'save1';
+        await api('/api/save', { method: 'POST', body: JSON.stringify({ name }) });
+        await refresh();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    $('gotoBtn').onclick = async () => {
+      try {
+        const name = $('pointName').value.trim() || 'save1';
+        const data = await api('/api/goto', { method: 'POST', body: JSON.stringify({ name }) });
+        state = { ...data.state, ports: state.ports };
+        render();
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+
+    refresh();
+    setInterval(refresh, 2000);
+  </script>
+</body>
+</html>

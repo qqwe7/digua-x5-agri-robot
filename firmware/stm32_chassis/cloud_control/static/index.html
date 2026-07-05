@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>云端小车操作台</title>
+  <style>
+    :root {
+      --bg-top: #eef6eb;
+      --bg-bottom: #dfe9d9;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-strong: rgba(255, 255, 255, 0.96);
+      --line: rgba(63, 84, 53, 0.14);
+      --line-strong: rgba(63, 84, 53, 0.22);
+      --text: #243225;
+      --muted: #687764;
+      --primary: #2f8f4e;
+      --primary-soft: rgba(47, 143, 78, 0.12);
+      --accent: #e7f4a2;
+      --warning: #f4b544;
+      --danger: #de5c43;
+      --danger-soft: rgba(222, 92, 67, 0.12);
+      --shadow: 0 24px 48px rgba(63, 84, 53, 0.14);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "HarmonyOS Sans SC", "Alibaba PuHuiTi", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(231, 244, 162, 0.8), transparent 24%),
+        radial-gradient(circle at top right, rgba(47, 143, 78, 0.16), transparent 20%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      padding: 24px;
+    }
+
+    .app {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero,
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero {
+      padding: 28px;
+      display: grid;
+      gap: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47, 143, 78, 0.16), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.1;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .connection-pill {
+      min-width: 220px;
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      display: grid;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pill-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill-value {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .status-online {
+      color: var(--primary);
+    }
+
+    .status-offline,
+    .status-error {
+      color: var(--danger);
+    }
+
+    .hero-grid,
+    .content-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+      align-items: stretch;
+    }
+
+    .hero-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .metric-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .summary-card {
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(47, 143, 78, 0.11), rgba(255, 255, 255, 0.88));
+      border: 1px solid var(--line);
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-title {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .summary-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .content-grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+      align-items: start;
+    }
+
+    .panel {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin: 0;
+    }
+
+    .panel-sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 6px 0 0;
+    }
+
+    .status-banner {
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+    }
+
+    .status-banner-title {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .status-banner-desc {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+    }
+
+    .status-item-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status-item-value {
+      text-align: right;
+      font-weight: 700;
+      max-width: 58%;
+      word-break: break-word;
+    }
+
+    .speed-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--line);
+    }
+
+    .manual-mode-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(231, 244, 162, 0.24));
+      border: 1px solid var(--line);
+    }
+
+    .manual-mode-copy {
+      display: grid;
+      gap: 8px;
+    }
+
+    .mode-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .mode-pill.safe {
+      background: rgba(244, 181, 68, 0.15);
+      border-color: rgba(244, 181, 68, 0.28);
+      color: #9b6b10;
+    }
+
+    .mode-pill.active {
+      background: rgba(47, 143, 78, 0.16);
+      border-color: rgba(47, 143, 78, 0.28);
+      color: var(--primary);
+    }
+
+    .manual-mode-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .speed-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 126px;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .field-label {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    input[type="number"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--line-strong);
+      background: rgba(251, 253, 248, 0.95);
+      color: var(--text);
+      padding: 12px 14px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: rgba(47, 143, 78, 0.4);
+      box-shadow: 0 0 0 4px rgba(47, 143, 78, 0.12);
+    }
+
+    .preset-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 18px;
+      padding: 14px 18px;
+      background: linear-gradient(180deg, rgba(47, 143, 78, 0.16), rgba(47, 143, 78, 0.08));
+      color: var(--text);
+      border: 1px solid rgba(47, 143, 78, 0.18);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: 0 16px 30px rgba(63, 84, 53, 0.10);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active,
+    button.active {
+      transform: translateY(1px);
+    }
+
+    button.active {
+      box-shadow: 0 0 0 4px rgba(47, 143, 78, 0.16);
+      background: linear-gradient(180deg, rgba(47, 143, 78, 0.24), rgba(47, 143, 78, 0.12));
+    }
+
+    button.secondary {
+      background: linear-gradient(180deg, rgba(231, 244, 162, 0.72), rgba(231, 244, 162, 0.5));
+      border-color: rgba(128, 148, 63, 0.18);
+    }
+
+    button.ghost {
+      background: rgba(255, 255, 255, 0.86);
+      border-color: var(--line);
+      box-shadow: none;
+    }
+
+    button.stop {
+      background: linear-gradient(180deg, rgba(222, 92, 67, 0.2), rgba(222, 92, 67, 0.1));
+      border-color: rgba(222, 92, 67, 0.24);
+    }
+
+    button.stop.active {
+      background: linear-gradient(180deg, rgba(222, 92, 67, 0.3), rgba(222, 92, 67, 0.14));
+      box-shadow: 0 0 0 4px rgba(222, 92, 67, 0.16);
+    }
+
+    .preset-btn {
+      min-width: 92px;
+      padding: 11px 14px;
+      font-size: 14px;
+      box-shadow: none;
+    }
+
+    .preset-btn.selected {
+      background: linear-gradient(180deg, rgba(47, 143, 78, 0.22), rgba(47, 143, 78, 0.1));
+      border-color: rgba(47, 143, 78, 0.3);
+    }
+
+    .control-layout {
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+      position: relative;
+    }
+
+    .control-layout.manual-disabled {
+      opacity: 0.58;
+    }
+
+    .control-guard {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(243, 247, 238, 0.82);
+      border: 1px dashed rgba(104, 119, 100, 0.28);
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+      font-size: 14px;
+      font-weight: 700;
+      z-index: 2;
+      backdrop-filter: blur(4px);
+    }
+
+    .control-layout.manual-disabled .control-guard {
+      display: grid;
+    }
+
+    .control-pad {
+      width: min(100%, 470px);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(92px, 1fr));
+      gap: 14px;
+    }
+
+    .control-btn {
+      min-height: 94px;
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .control-btn small {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .placeholder {
+      min-height: 94px;
+      border-radius: 20px;
+      border: 1px dashed rgba(104, 119, 100, 0.22);
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    .action-row,
+    .inline {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .action-row > *,
+    .inline > * {
+      flex: 1;
+    }
+
+    .guide {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .guide-step {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .guide-step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .reply-card,
+    .log-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+    }
+
+    .reply-text {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .reply-note {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    pre {
+      margin: 0;
+      min-height: 220px;
+      max-height: 360px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #2d3d2d;
+    }
+
+    details {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.76);
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 16px 18px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .details-body {
+      padding: 0 18px 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .tip {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 16px;
+      }
+
+      .hero,
+      .panel {
+        padding: 18px;
+      }
+
+      .hero-cards,
+      .guide {
+        grid-template-columns: 1fr;
+      }
+
+      .speed-row {
+        grid-template-columns: 1fr;
+      }
+
+      .control-pad {
+        grid-template-columns: repeat(3, minmax(74px, 1fr));
+      }
+
+      .control-btn,
+      .placeholder {
+        min-height: 84px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="hero-copy">
+          <div class="eyebrow">现场操作台 · 保持现有通讯协议</div>
+          <h1>云端小车操作台</h1>
+          <p class="sub">把常用控制放在最前面，把调试项目放到次级区域。你可以像现场操作员一样直接看状态、调速度、点动控制，而底层仍然走原来的 HTTP 接口和串口/TCP 指令。</p>
+        </div>
+        <div class="connection-pill">
+          <div class="pill-label">当前车辆连接</div>
+          <div class="pill-value status-offline" id="heroConnection">离线</div>
+          <div class="tip" id="heroConnectionNote">等待车辆接入，建议先检查供电、串口或 4G 链路。</div>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-cards">
+          <div class="metric">
+            <div class="metric-label">连接状态</div>
+            <div class="metric-value" id="carState">离线</div>
+            <div class="metric-note" id="connectedAt">尚未建立连接</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">车辆地址</div>
+            <div class="metric-value" id="carAddr">-</div>
+            <div class="metric-note">本地串口或 TCP 车端入口</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">最近心跳</div>
+            <div class="metric-value" id="lastSeen">-</div>
+            <div class="metric-note" id="replyCount">尚未收到回复</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">最近动作</div>
+            <div class="metric-value" id="lastCommand">-</div>
+            <div class="metric-note" id="lastCommandAt">还没有发送过指令</div>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <h2 class="summary-title" id="summaryTitle">可以开始前先确认连接</h2>
+          <p class="summary-desc" id="summaryDesc">当车辆显示在线后，先用低速做短距离点动，再逐步提高速度。松开控制键会自动发送停止指令。</p>
+          <div class="quick-actions">
+            <button class="secondary" id="statusBtn">刷新车辆状态</button>
+            <button class="stop" id="panicBtn">紧急停车</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>行驶控制</h2>
+            <p class="panel-sub">保留原有 `carfwd / carback / carleft / carright / carstop / status` 指令，只把操作界面整理得更直观。</p>
+          </div>
+        </div>
+
+        <div class="speed-card">
+          <div class="speed-row">
+            <div>
+              <div class="field-label">行驶速度（RPM）</div>
+              <input id="rpmRange" type="range" min="1" max="60" value="12">
+            </div>
+            <div>
+              <div class="field-label">当前数值</div>
+              <input id="rpmValue" type="number" min="1" max="60" value="12">
+            </div>
+          </div>
+          <div class="preset-row">
+            <button class="preset-btn ghost" data-rpm="10">慢速 10</button>
+            <button class="preset-btn ghost" data-rpm="20">常用 20</button>
+            <button class="preset-btn ghost" data-rpm="30">快速 30</button>
+            <button class="preset-btn ghost" data-rpm="45">高档 45</button>
+          </div>
+        </div>
+
+        <div class="manual-mode-card">
+          <div class="manual-mode-copy">
+            <div class="field-label">??????</div>
+            <div class="mode-pill safe" id="manualModeLabel">????</div>
+            <div class="tip" id="manualModeDesc">???????????????????????????????????????????????</div>
+          </div>
+          <div class="manual-mode-actions">
+            <button id="enableManualBtn">??????</button>
+            <button class="ghost" id="disableManualBtn">??????</button>
+          </div>
+        </div>
+
+        <div class="control-layout manual-disabled" id="controlLayout">
+          <div class="control-guard" id="manualGuard">???????????????????????????????????????</div>
+          <div class="control-pad">
+            <div class="placeholder"></div>
+            <button class="control-btn" data-cmd="carfwd">
+              前进
+              <small>按住持续发送</small>
+            </button>
+            <div class="placeholder"></div>
+
+            <button class="control-btn" data-cmd="carleft">
+              左转
+              <small>原地转向</small>
+            </button>
+            <button class="control-btn stop" data-cmd="carstop" data-no-rpm="1">
+              停止
+              <small>立即停车</small>
+            </button>
+            <button class="control-btn" data-cmd="carright">
+              右转
+              <small>原地转向</small>
+            </button>
+
+            <div class="placeholder"></div>
+            <button class="control-btn" data-cmd="carback">
+              后退
+              <small>按住持续发送</small>
+            </button>
+            <div class="placeholder"></div>
+          </div>
+
+          <div class="action-row">
+            <button class="ghost" id="sendStopBtn">发送停止指令</button>
+            <button class="secondary" id="manualStatusBtn">发送 status</button>
+          </div>
+        </div>
+
+        <div class="guide">
+          <div class="guide-step">
+            <strong>1. 先看连接</strong>
+            只有“连接状态”为在线时再开始控制，离线时不要反复点动。
+          </div>
+          <div class="guide-step">
+            <strong>2. 先低速试车</strong>
+            建议从 10 到 20 RPM 开始，确认方向和响应都正确再提速。
+          </div>
+          <div class="guide-step">
+            <strong>3. 松手即停</strong>
+            鼠标松开、窗口失焦或按空格，都会走现有的停止逻辑。
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div>
+          <h3>运行状态</h3>
+          <p class="panel-sub">给使用者看的状态摘要，尽量不暴露开发细节。</p>
+        </div>
+
+        <div class="status-banner">
+          <div class="status-banner-title" id="runStateTitle">等待连接</div>
+          <div class="status-banner-desc" id="runStateDesc">连接建立后，这里会提示你是否适合开始操作，以及最近的通讯反馈。</div>
+        </div>
+
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-item-label">最近回复</div>
+            <div class="status-item-value" id="lastReply">-</div>
+          </div>
+          <div class="status-item">
+            <div class="status-item-label">回复次数</div>
+            <div class="status-item-value" id="replyCountValue">0 次</div>
+          </div>
+          <div class="status-item">
+            <div class="status-item-label">服务端时间</div>
+            <div class="status-item-value" id="serverTime">-</div>
+          </div>
+        </div>
+
+        <div class="reply-card">
+          <div class="field-label">最近一次车辆回包</div>
+          <div class="reply-text" id="replyText">-</div>
+          <div class="reply-note" id="replyHint">返回内容保持原样显示，便于成员 B 继续核对协议行为。</div>
+        </div>
+
+        <div class="log-card">
+          <div class="field-label">操作记录</div>
+          <pre id="log"></pre>
+        </div>
+
+        <details>
+          <summary>高级设置与手动命令</summary>
+          <div class="details-body">
+            <div>
+              <div class="field-label">访问令牌</div>
+              <input id="token" type="password" placeholder="输入服务端 token">
+            </div>
+            <div>
+              <div class="field-label">手动发送命令</div>
+              <div class="inline">
+                <input id="manualCmd" type="text" value="status">
+                <button id="sendBtn">发送</button>
+              </div>
+            </div>
+            <div class="tip">这里保留原始命令入口，方便你和成员 B 回归验证，但默认不打扰普通使用者。</div>
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const stateEls = {
+      heroConnection: document.getElementById("heroConnection"),
+      heroConnectionNote: document.getElementById("heroConnectionNote"),
+      carState: document.getElementById("carState"),
+      carAddr: document.getElementById("carAddr"),
+      connectedAt: document.getElementById("connectedAt"),
+      lastSeen: document.getElementById("lastSeen"),
+      lastCommand: document.getElementById("lastCommand"),
+      lastCommandAt: document.getElementById("lastCommandAt"),
+      lastReply: document.getElementById("lastReply"),
+      replyText: document.getElementById("replyText"),
+      replyHint: document.getElementById("replyHint"),
+      replyCount: document.getElementById("replyCount"),
+      replyCountValue: document.getElementById("replyCountValue"),
+      serverTime: document.getElementById("serverTime"),
+      summaryTitle: document.getElementById("summaryTitle"),
+      summaryDesc: document.getElementById("summaryDesc"),
+      runStateTitle: document.getElementById("runStateTitle"),
+      runStateDesc: document.getElementById("runStateDesc"),
+      log: document.getElementById("log"),
+      token: document.getElementById("token"),
+      rpmRange: document.getElementById("rpmRange"),
+      rpmValue: document.getElementById("rpmValue"),
+      manualCmd: document.getElementById("manualCmd"),
+      manualModeLabel: document.getElementById("manualModeLabel"),
+      manualModeDesc: document.getElementById("manualModeDesc"),
+      enableManualBtn: document.getElementById("enableManualBtn"),
+      disableManualBtn: document.getElementById("disableManualBtn"),
+      controlLayout: document.getElementById("controlLayout")
+    };
+
+    let holdTimer = null;
+    let activeHoldButton = null;
+    let activeHoldCommand = "";
+    let stateRequestInFlight = false;
+    let commandRequestInFlight = false;
+    let manualDriveEnabled = false;
+
+    const HOLD_INTERVAL_MS = 700;
+    const STATE_POLL_MS = 5000;
+    const keyBindings = {
+      "w": "carfwd",
+      "arrowup": "carfwd",
+      "s": "carback",
+      "arrowdown": "carback",
+      "a": "carleft",
+      "arrowleft": "carleft",
+      "d": "carright",
+      "arrowright": "carright"
+    };
+    const pressedKeys = new Set();
+
+    const tokenFromUrl = new URLSearchParams(window.location.search).get("token") || "";
+    const storedToken = tokenFromUrl || localStorage.getItem("car-control-token") || "car123";
+    stateEls.token.value = storedToken;
+
+    function appendLog(line) {
+      const now = new Date().toLocaleTimeString();
+      stateEls.log.textContent = `[${now}] ${line}\n` + stateEls.log.textContent;
+    }
+
+    function isMotionCommand(command) {
+      const text = String(command || "").trim().toLowerCase();
+      return text.startsWith("carfwd") || text.startsWith("carback") || text.startsWith("carleft") || text.startsWith("carright");
+    }
+
+    function updateManualModeUi() {
+      if (!stateEls.manualModeLabel || !stateEls.manualModeDesc || !stateEls.controlLayout) {
+        return;
+      }
+      stateEls.manualModeLabel.textContent = manualDriveEnabled ? "?????" : "????";
+      stateEls.manualModeLabel.className = `mode-pill ${manualDriveEnabled ? 'active' : 'safe'}`;
+      stateEls.manualModeDesc.textContent = manualDriveEnabled
+        ? "?????????????????????????????????????????????"
+        : "???????????????????????????????????????????????";
+      stateEls.controlLayout.classList.toggle("manual-disabled", !manualDriveEnabled);
+    }
+
+    function formatDateTime(ts) {
+      if (!ts) {
+        return "—";
+      }
+      return new Date(ts * 1000).toLocaleString();
+    }
+
+    function formatRelative(ts) {
+      if (!ts) {
+        return "—";
+      }
+
+      const diff = Math.max(0, Math.round(Date.now() / 1000 - ts));
+      if (diff < 5) return "刚刚";
+      if (diff < 60) return `${diff} 秒前`;
+      if (diff < 3600) return `${Math.floor(diff / 60)} 分钟前`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)} 小时前`;
+      return `${Math.floor(diff / 86400)} 天前`;
+    }
+
+    function setConnectionState(status, note) {
+      stateEls.heroConnection.textContent = status;
+      stateEls.carState.textContent = status;
+
+      stateEls.heroConnection.classList.remove("status-online", "status-offline", "status-error");
+      stateEls.carState.classList.remove("status-online", "status-offline", "status-error");
+
+      const className = status === "在线" ? "status-online" : status === "认证失败" ? "status-error" : "status-offline";
+      stateEls.heroConnection.classList.add(className);
+      stateEls.carState.classList.add(className);
+      stateEls.heroConnectionNote.textContent = note;
+    }
+
+    function updateNarrative(data) {
+      if (data.authError) {
+        stateEls.summaryTitle.textContent = "请先确认访问令牌";
+        stateEls.summaryDesc.textContent = "当前页面未通过接口鉴权，通讯协议没有变化，请检查 token 是否与服务端一致。";
+        stateEls.runStateTitle.textContent = "认证失败";
+        stateEls.runStateDesc.textContent = "车辆控制未开始，请先修正令牌，再刷新状态。";
+        return;
+      }
+
+      if (!data.connected) {
+        stateEls.summaryTitle.textContent = "车辆未接入，先排查链路";
+        stateEls.summaryDesc.textContent = "可以先检查供电、串口占用、4G 透传或车端上电状态。连接恢复后再开始点动。";
+        stateEls.runStateTitle.textContent = "等待车辆上线";
+        stateEls.runStateDesc.textContent = "目前还不适合发运动指令。建议先点一次“刷新车辆状态”确认链路。";
+        return;
+      }
+
+      const reply = (data.last_reply || "").toUpperCase();
+      if (reply.startsWith("ERR")) {
+        stateEls.summaryTitle.textContent = "车辆已在线，但最近一条回复异常";
+        stateEls.summaryDesc.textContent = "建议先发送一次 status，确认成员 B 那边的指令解释与回包格式仍然正常。";
+        stateEls.runStateTitle.textContent = "需要人工确认";
+        stateEls.runStateDesc.textContent = "最近一条回包包含错误标记，先别提速，先做协议回归确认。";
+        return;
+      }
+
+      stateEls.summaryTitle.textContent = "车辆在线，可以开始低速操作";
+      stateEls.summaryDesc.textContent = "建议从低速短按开始，确认方向正确后再连续按住控制。当前页面仍在使用原来的命令字和接口。";
+      stateEls.runStateTitle.textContent = "通讯正常";
+      stateEls.runStateDesc.textContent = "连接在线，回包正常，可以按现有流程进行点动或状态查询。";
+    }
+
+    function applyState(data) {
+      const connected = Boolean(data.connected);
+      setConnectionState(
+        data.authError ? "认证失败" : connected ? "在线" : "离线",
+        data.authError
+          ? "接口返回未授权，请确认 token。"
+          : connected
+            ? `车辆最近一次活跃：${formatRelative(data.last_seen)}。`
+            : "等待车辆接入，建议先检查供电、串口或 4G 链路。"
+      );
+
+      stateEls.carAddr.textContent = data.car_address || "-";
+      stateEls.connectedAt.textContent = data.connected_at ? `建立于 ${formatDateTime(data.connected_at)}` : "尚未建立连接";
+      stateEls.lastSeen.textContent = data.last_seen ? formatRelative(data.last_seen) : "—";
+      stateEls.lastCommand.textContent = data.last_command || "-";
+      stateEls.lastCommandAt.textContent = data.last_command_at ? `发送于 ${formatDateTime(data.last_command_at)}` : "还没有发送过指令";
+      stateEls.lastReply.textContent = data.last_reply || "-";
+      stateEls.replyText.textContent = data.last_reply || "暂无回包";
+      stateEls.replyHint.textContent = data.last_reply
+        ? "这里直接显示车辆原始回包，便于继续核对协议兼容性。"
+        : "还没有收到车辆回包。";
+      stateEls.replyCount.textContent = data.reply_count ? `累计收到 ${data.reply_count} 次回包` : "尚未收到回复";
+      stateEls.replyCountValue.textContent = `${data.reply_count || 0} 次`;
+      stateEls.serverTime.textContent = data.server_time ? formatDateTime(data.server_time) : "—";
+
+      updateNarrative(data);
+      updatePresetButtons();
+    }
+
+    function syncRpmFromRange() {
+      stateEls.rpmValue.value = stateEls.rpmRange.value;
+      updatePresetButtons();
+    }
+
+    function syncRpmFromInput() {
+      const value = Math.max(1, Math.min(60, Number(stateEls.rpmValue.value || 12)));
+      stateEls.rpmValue.value = value;
+      stateEls.rpmRange.value = value;
+      updatePresetButtons();
+    }
+
+    function setRpm(value) {
+      stateEls.rpmRange.value = value;
+      stateEls.rpmValue.value = value;
+      updatePresetButtons();
+    }
+
+    function updatePresetButtons() {
+      const value = String(stateEls.rpmValue.value);
+      document.querySelectorAll("[data-rpm]").forEach((button) => {
+        button.classList.toggle("selected", button.dataset.rpm === value);
+      });
+    }
+
+    async function api(path, options = {}) {
+      const token = stateEls.token.value.trim();
+      localStorage.setItem("car-control-token", token);
+
+      const headers = Object.assign({}, options.headers || {}, { "X-Token": token });
+      const response = await fetch(path, Object.assign({}, options, { headers }));
+      const data = await response.json().catch(() => ({ ok: false, error: "bad json" }));
+
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP ${response.status}`);
+      }
+
+      return data;
+    }
+
+    function applyAuthError(message) {
+      applyState({
+        connected: false,
+        car_address: stateEls.carAddr.textContent || "",
+        connected_at: 0,
+        last_seen: 0,
+        last_reply: "",
+        reply_count: 0,
+        last_command: "",
+        last_command_at: 0,
+        server_time: 0,
+        authError: true
+      });
+      appendLog(`状态读取失败: ${message}`);
+    }
+
+    async function refreshState(silent = false) {
+      if (stateRequestInFlight || commandRequestInFlight) {
+        return;
+      }
+
+      stateRequestInFlight = true;
+      try {
+        const data = await api("/api/state");
+        applyState(data);
+      } catch (err) {
+        if (String(err.message).includes("unauthorized")) {
+          if (!silent) {
+            applyAuthError(err.message);
+          } else {
+            applyState({ connected: false, authError: true });
+          }
+        } else if (!silent) {
+          appendLog(`状态读取失败: ${err.message}`);
+        }
+      } finally {
+        stateRequestInFlight = false;
+      }
+    }
+
+    async function sendCommand(command) {
+      if (!command || commandRequestInFlight) {
+        return;
+      }
+
+      if (isMotionCommand(command) && !manualDriveEnabled) {
+        appendLog(`??????? ${command}??????????`);
+        return;
+      }
+
+      commandRequestInFlight = true;
+      appendLog(`发送: ${command}`);
+      try {
+        const data = await api("/api/command", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command })
+        });
+        appendLog(`回复: ${data.reply || "(无回复)"}`);
+        if (data.state) {
+          applyState(data.state);
+        }
+      } catch (err) {
+        appendLog(`失败: ${err.message}`);
+      } finally {
+        commandRequestInFlight = false;
+      }
+    }
+
+    function clearActiveButton() {
+      if (activeHoldButton) {
+        activeHoldButton.classList.remove("active");
+      }
+      activeHoldButton = null;
+    }
+
+    function startHold(button) {
+      const cmd = button.dataset.cmd;
+      if (!cmd || button.dataset.noRpm === "1") {
+        return;
+      }
+
+      stopHold(false);
+      syncRpmFromInput();
+      activeHoldCommand = `${cmd} ${stateEls.rpmValue.value}`;
+      activeHoldButton = button;
+      activeHoldButton.classList.add("active");
+      sendCommand(activeHoldCommand);
+      holdTimer = setInterval(() => sendCommand(activeHoldCommand), HOLD_INTERVAL_MS);
+    }
+
+    function stopHold(sendStop = true) {
+      if (holdTimer) {
+        clearInterval(holdTimer);
+        holdTimer = null;
+      }
+
+      if (activeHoldCommand && sendStop) {
+        sendCommand("carstop");
+      }
+
+      activeHoldCommand = "";
+      clearActiveButton();
+    }
+
+    function isTypingTarget(target) {
+      if (!target) {
+        return false;
+      }
+      const tag = (target.tagName || "").toLowerCase();
+      return tag === "input" || tag === "textarea" || target.isContentEditable;
+    }
+
+    function findButtonByCommand(command) {
+      return document.querySelector(`button[data-cmd="${command}"]`);
+    }
+
+    document.querySelectorAll("button[data-cmd]").forEach((button) => {
+      const cmd = button.dataset.cmd;
+      if (button.dataset.noRpm === "1") {
+        button.addEventListener("click", () => sendCommand(cmd));
+        return;
+      }
+
+      button.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        startHold(button);
+      });
+      button.addEventListener("pointerup", () => stopHold(true));
+      button.addEventListener("pointerleave", () => stopHold(true));
+      button.addEventListener("pointercancel", () => stopHold(true));
+    });
+
+    document.querySelectorAll("[data-rpm]").forEach((button) => {
+      button.addEventListener("click", () => setRpm(Number(button.dataset.rpm)));
+    });
+
+    stateEls.enableManualBtn?.addEventListener("click", () => {
+      manualDriveEnabled = true;
+      updateManualModeUi();
+      appendLog("?????????");
+    });
+    stateEls.disableManualBtn?.addEventListener("click", () => {
+      manualDriveEnabled = false;
+      stopHold(false);
+      updateManualModeUi();
+      appendLog("?????????");
+      sendCommand("carstop");
+    });
+
+    document.getElementById("statusBtn").addEventListener("click", () => sendCommand("status"));
+    document.getElementById("panicBtn").addEventListener("click", () => {
+      stopHold(false);
+      sendCommand("carstop");
+    });
+    document.getElementById("sendStopBtn").addEventListener("click", () => {
+      stopHold(false);
+      sendCommand("carstop");
+    });
+    document.getElementById("manualStatusBtn").addEventListener("click", () => sendCommand("status"));
+    document.getElementById("sendBtn").addEventListener("click", () => sendCommand(stateEls.manualCmd.value.trim()));
+
+    stateEls.rpmRange.addEventListener("input", syncRpmFromRange);
+    stateEls.rpmValue.addEventListener("change", syncRpmFromInput);
+    stateEls.token.addEventListener("change", () => refreshState(false));
+
+    window.addEventListener("pointerup", () => stopHold(true));
+    window.addEventListener("blur", () => stopHold(true));
+    window.addEventListener("keydown", (event) => {
+      if (isTypingTarget(event.target)) {
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+      if (key === " ") {
+        event.preventDefault();
+        stopHold(false);
+        sendCommand("carstop");
+        return;
+      }
+
+      const command = keyBindings[key];
+      if (!command) {
+        return;
+      }
+
+      if (!manualDriveEnabled) {
+        event.preventDefault();
+        appendLog(`??????? ${event.key}??????????`);
+        return;
+      }
+
+      event.preventDefault();
+      if (pressedKeys.has(key)) {
+        return;
+      }
+
+      pressedKeys.add(key);
+      const button = findButtonByCommand(command);
+      if (button) {
+        startHold(button);
+      }
+    });
+
+    window.addEventListener("keyup", (event) => {
+      const key = event.key.toLowerCase();
+      if (keyBindings[key]) {
+        pressedKeys.delete(key);
+        stopHold(true);
+      } else if (key === " ") {
+        pressedKeys.delete(key);
+      }
+    });
+
+    syncRpmFromInput();
+    updateManualModeUi();
+    refreshState(true);
+    setInterval(() => {
+      if (!document.hidden) {
+        refreshState(true);
+      }
+    }, STATE_POLL_MS);
+  </script>
+</body>
+</html>

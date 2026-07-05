@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+httpx
+paho-mqtt
+pyserial
+PyYAML
+numpy
+opencv-python-headless
+pillow
+ultralytics

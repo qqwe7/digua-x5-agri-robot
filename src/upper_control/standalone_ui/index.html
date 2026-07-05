@@ -1,0 +1,865 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>农业机器人上位机控制中心</title>
+  <meta name="description" content="鍩轰簬椋炶吘娲剧殑农业机器人上位机控制中心" />
+  <link rel="stylesheet" href="/styles.css?v=20260503-coprocessor-1" />
+</head>
+
+<body>
+  <section class="login-screen" id="loginScreen">
+    <div class="login-stage">
+      <div class="login-visual">
+        <div class="login-bg-img" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#bfdff5" />
+                <stop offset="48%" stop-color="#dff0db" />
+                <stop offset="100%" stop-color="#9fbe79" />
+              </linearGradient>
+              <linearGradient id="farHill" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#7da163" />
+                <stop offset="100%" stop-color="#4e7340" />
+              </linearGradient>
+              <linearGradient id="midHill" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#678d50" />
+                <stop offset="100%" stop-color="#3c5f34" />
+              </linearGradient>
+              <linearGradient id="fieldA" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#9f8a45" />
+                <stop offset="100%" stop-color="#6d5b2c" />
+              </linearGradient>
+              <linearGradient id="fieldB" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#7fa653" />
+                <stop offset="100%" stop-color="#4f762d" />
+              </linearGradient>
+              <linearGradient id="fieldC" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#bf9c4c" />
+                <stop offset="100%" stop-color="#876c2f" />
+              </linearGradient>
+              <radialGradient id="sunGlow" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%" stop-color="#fff4b4" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#fff4b4" stop-opacity="0" />
+              </radialGradient>
+              <linearGradient id="lightBeam" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#fff7c7" stop-opacity="0.46" />
+                <stop offset="100%" stop-color="#fff7c7" stop-opacity="0" />
+              </linearGradient>
+              <linearGradient id="foregroundLeaf" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#d8e99a" />
+                <stop offset="100%" stop-color="#416f2d" />
+              </linearGradient>
+              <pattern id="fieldTexture" width="48" height="48" patternUnits="userSpaceOnUse">
+                <path d="M0 42C12 35 26 35 48 42" stroke="#fff1b7" stroke-opacity="0.2" stroke-width="2" fill="none" />
+                <path d="M0 18C16 10 32 10 48 18" stroke="#1d3f22" stroke-opacity="0.12" stroke-width="1.2" fill="none" />
+              </pattern>
+              <pattern id="grain" width="12" height="12" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="3" r="0.9" fill="#ffffff" opacity="0.18" />
+                <circle cx="8" cy="9" r="0.7" fill="#1c321f" opacity="0.08" />
+              </pattern>
+              <filter id="softBlur">
+                <feGaussianBlur stdDeviation="24" />
+              </filter>
+            </defs>
+            <rect width="1600" height="900" fill="url(#sky)" />
+            <circle cx="1220" cy="150" r="180" fill="url(#sunGlow)" />
+            <path d="M1090 10L1600 0L1600 430L1170 625Z" fill="url(#lightBeam)" opacity="0.55" />
+            <path d="M914 0L1600 0L1600 300L1030 528Z" fill="url(#lightBeam)" opacity="0.28" />
+            <g opacity="0.55">
+              <ellipse cx="340" cy="150" rx="200" ry="56" fill="#ffffff" filter="url(#softBlur)" />
+              <ellipse cx="620" cy="190" rx="260" ry="62" fill="#eef9ff" filter="url(#softBlur)" />
+              <ellipse cx="1010" cy="140" rx="220" ry="54" fill="#ffffff" filter="url(#softBlur)" />
+            </g>
+            <path d="M0 390C170 334 280 324 432 338C622 356 758 438 944 432C1126 426 1272 334 1458 330C1516 329 1568 334 1600 340V900H0Z" fill="url(#farHill)" />
+            <path d="M0 474C166 422 286 416 430 434C586 454 714 534 864 536C1032 538 1166 450 1322 432C1446 417 1538 422 1600 438V900H0Z" fill="url(#midHill)" />
+            <path d="M0 614C144 570 282 560 422 576C566 592 694 638 834 646C996 656 1132 622 1288 592C1404 570 1504 566 1600 578V900H0Z" fill="url(#fieldA)" />
+            <path d="M0 662C144 616 302 602 468 618C614 632 738 680 882 694C1036 710 1178 682 1338 646C1448 622 1528 618 1600 628V900H0Z" fill="url(#fieldB)" />
+            <path d="M0 714C162 668 338 658 510 678C672 696 796 738 958 752C1106 766 1232 748 1372 716C1466 694 1540 688 1600 694V900H0Z" fill="url(#fieldC)" />
+            <path d="M0 768C176 730 362 726 542 744C704 760 828 796 980 806C1108 814 1234 802 1384 776C1470 760 1540 754 1600 758V900H0Z" fill="url(#fieldB)" />
+            <rect y="560" width="1600" height="340" fill="url(#fieldTexture)" opacity="0.9" />
+            <g opacity="0.32" stroke-linecap="round">
+              <path d="M72 798C210 734 382 704 564 716C718 726 864 770 1008 780C1170 792 1324 772 1490 726" stroke="#f3e3a7" stroke-width="4" fill="none" />
+              <path d="M106 692C254 638 394 620 544 634C694 648 822 694 974 706C1130 720 1282 700 1468 652" stroke="#d5efb2" stroke-width="4" fill="none" />
+            </g>
+            <g opacity="0.42">
+              <path d="M78 900C120 820 145 754 150 674C196 744 210 826 202 900Z" fill="url(#foregroundLeaf)" />
+              <path d="M1400 900C1400 808 1434 734 1492 668C1518 744 1536 828 1534 900Z" fill="url(#foregroundLeaf)" />
+              <path d="M1302 900C1318 826 1358 778 1416 742C1424 808 1412 858 1384 900Z" fill="#5f8b3f" opacity="0.72" />
+            </g>
+            <rect width="1600" height="900" fill="url(#grain)" opacity="0.55" />
+          </svg>
+        </div>
+        <div class="login-copy">
+          <span class="login-eyebrow">SMART AGRICULTURE</span>
+          <h2 data-i18n="brandTitle">农业机器人控制中心</h2>
+          <p data-i18n="loginSub">登录后进入地瓜派X5巡检、建图、喷洒与智能助手控制中心。</p>
+        </div>
+      </div>
+
+      <form class="login-card" id="loginForm">
+        <div class="login-mark"><img src="/assets/agri-logo.svg" alt="农业" /></div>
+        <h1 data-i18n="loginTitle">农业机器人上位机</h1>
+        <p class="login-subtitle" data-i18n="loginSub">登录后进入地瓜派X5巡检、建图、喷洒与智能助手控制中心。</p>
+        <label for="loginUser" data-i18n="account">账号</label>
+        <input id="loginUser" autocomplete="username" value="1111" />
+        <label for="loginPass" data-i18n="password">密码</label>
+        <input id="loginPass" type="password" autocomplete="current-password" value="1111" />
+        <button class="btn-p login-btn" type="submit" data-i18n="enterSystem">进入系统</button>
+        <div class="login-error" id="loginError" data-i18n="loginError">账号或密码错误，默认账号和密码均为 1111。</div>
+        <div class="login-tip" data-i18n="loginTip">默认账号：1111　默认密码：1111</div>
+      </form>
+    </div>
+  </section>
+
+  <div class="app locked" id="appShell">
+    <aside class="sidebar">
+      <div class="sb-brand">
+        <div class="sb-logo"><img src="/assets/agri-logo.svg" alt="农业" /></div>
+        <div>
+          <div class="sb-title" data-i18n="brandTitle">农业机器人控制中心</div>
+          <div class="sb-sub" data-i18n="brandSub">地瓜派X5 · MQTT · 智能农业</div>
+        </div>
+      </div>
+
+      <nav class="sb-nav">
+        <button class="sb-item active" data-tab="overview"><span class="sb-ico">总</span><span data-i18n="tabOverview">作业总览</span></button>
+        <button class="sb-item" data-tab="control"><span class="sb-ico">任</span><span data-i18n="tabControl">任务操作</span></button>
+        <button class="sb-item" data-tab="vehicle"><span class="sb-ico">车</span><span data-i18n="tabVehicle">小车建图导航</span></button>
+        <button class="sb-item" data-tab="coprocessor"><span class="sb-ico">核</span><span data-i18n="tabCoprocessor">从核任务</span></button>
+        <button class="sb-item" data-tab="arm"><span class="sb-ico">视</span><span data-i18n="tabArm">视觉抓取监看</span></button>
+        <button class="sb-item" data-tab="chat"><span class="sb-ico">AI</span><span data-i18n="tabChat">智能助手</span></button>
+        <button class="sb-item" data-tab="logs"><span class="sb-ico">记</span><span data-i18n="tabLogs">运行回顾</span></button>
+      </nav>
+
+      <div class="sb-footer">
+        <button class="sb-foot-btn" id="langToggle"><span class="sb-ico">切</span><span id="langLabel">English</span></button>
+        <button class="sb-foot-btn" id="helpBtn"><span class="sb-ico">?</span><span data-i18n="help">帮助说明</span></button>
+        <button class="sb-foot-btn" id="settingsBtn"><span class="sb-ico">设</span><span data-i18n="settings">系统设置</span></button>
+        <button class="sb-foot-btn" id="logoutBtn"><span class="sb-ico">关</span><span data-i18n="logout">退出登录</span></button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <div class="tb-left">
+          <div>
+            <span class="tb-kicker">FIELD CONSOLE</span>
+            <span class="tb-page-title" id="pageTitle" data-i18n="tabOverview">作业总览</span>
+          </div>
+          <span class="link-pill offline" id="rdk_x5Pill">机器人未连接</span>
+          <span class="link-pill mqtt" id="mqttPill">通讯链路待命</span>
+        </div>
+        <div class="tb-right">
+          <span class="mode-chip chip-idle" id="modeChip">待命</span>
+          <span class="tb-pill tb-pill-mode"><span data-i18n="operationMode">作业模式</span><span id="headerOperationMode">自动模式</span></span>
+          <span class="tb-pill"><span data-i18n="battery">电量</span><span id="headerBat">--%</span></span>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <div class="mode-strip idle" id="modeStrip">
+          <div class="mode-copy">
+            <span class="mode-strip-title" id="modeTitle">当前建议</span>
+            <span id="modeDesc">系统待命，等待任务计划或地瓜派X5通过 MQTT 上报数据。</span>
+          </div>
+          <div class="mode-strip-tools">
+            <div class="mode-strip-mode-panel">
+              <div class="mode-strip-mode-head">
+                <span data-i18n="operationMode">作业模式</span>
+                <b id="overviewModeBadge">自动模式</b>
+              </div>
+              <div class="assistant-mode-switch overview-mode-switch">
+                <button type="button" class="assistant-mode-btn active" data-assistant-mode="auto" data-i18n="autoMode">自动模式</button>
+                <button type="button" class="assistant-mode-btn" data-assistant-mode="manual" data-i18n="manualMode">鎵嬪姩妯″紡</button>
+              </div>
+              <div class="mode-strip-mode-hint" id="overviewModeHint">自动模式涓嬶紝澶фā鍨嬩細缁撳悎鐜板満淇℃伅鐩存帴鍐崇瓥骞朵笅鍙戝厑记哥殑任诲姟銆</div>
+            </div>
+            <div class="ms-actions" id="modeActions"></div>
+          </div>
+        </div>
+        <div id="banner" class="banner hidden" data-i18n="lowPowerBanner">绯荤粺澶勪簬浣庣數閲忓簲总ユā寮忥紝璇峰叧娉ㄥお闃宠兘鏉垮睍寮€鐘舵€佷笌鍏抽敭涓婃姤閾捐矾銆</div>
+
+        <section id="overview" class="page active">
+          <div class="ops-layout">
+            <section class="panel ops-hero-panel">
+              <div class="panel-title"><span>椹鹃┒</span><b data-i18n="operatorSummary">浣滀笟鎻愮ず</b></div>
+              <div id="overviewSummary"></div>
+              <div class="ops-stage-grid">
+                <article class="ops-visual-card primary">
+                  <div class="panel-title"><span>鐜板満</span><b data-i18n="cameraFrame">瀹炴椂鎽勫儚鏈虹敾闈</b></div>
+                  <div id="cameraMedia"></div>
+                </article>
+                <article class="ops-visual-card secondary">
+                  <div class="panel-title"><span>寤哄浘</span><b data-i18n="radarMap">闆疯揪寤哄浘鐢婚潰</b></div>
+                  <div id="radarMedia"></div>
+                </article>
+              </div>
+            </section>
+
+            <aside class="panel ops-side-panel">
+              <div class="panel-title"><span>娴佺▼</span><b data-i18n="workflowFocus">褰撳墠娴佺▼</b></div>
+              <div id="modeCtx"></div>
+              <div class="panel-title"><span>閾捐矾</span><b data-i18n="mqttConnection">MQTT 杩炴帴鐘舵€</b></div>
+              <div id="rdk_x5LinkPanel"></div>
+              <div class="panel-title"><span>记惧</span><b data-i18n="deviceStatus">记惧鐘舵€</b></div>
+              <div class="device-strip" id="devGrid"></div>
+            </aside>
+
+            <section class="panel ops-actions-panel">
+              <div class="panel-title"><span>宸ヤ綅</span><b data-i18n="workbenchTitle">鐜板満鎿嶄綔鍙</b></div>
+              <div class="ops-workbench-grid" id="missionWorkbench"></div>
+              <div class="panel-title"><span>鍔ㄤ綔</span><b data-i18n="recommendedActions">鎺ㄨ崘鎿嶄綔</b></div>
+              <div class="ops-actions-copy" id="opsActionsCopy">浼樺厛浣跨敤涓嬫柟鐨勪富鎿嶄綔鎸夐挳锛屼笉蹇呭厛鏌ョ湅搴曞眰鍙傛暟銆</div>
+              <div class="ops-action-grid" id="modeActionsBoard"></div>
+            </section>
+
+            <section class="panel ops-detail-panel">
+              <details class="ops-detail-fold">
+                <summary data-i18n="detailFold">鏌ョ湅璇︾粏鐘舵€佷笌璇婃柇淇℃伅</summary>
+                <div class="data-grid">
+                  <article><div class="panel-title"><span>ENV</span><b data-i18n="envParams">鐜鍙傛暟</b></div><div id="envList"></div></article>
+                  <article><div class="panel-title"><span>VIS</span><b data-i18n="visionDetect">视嗚璇嗗埆</b></div><div id="visList"></div></article>
+                  <article><div class="panel-title"><span>PWR</span><b data-i18n="energyStatus">鑳芥簮鐘舵€</b></div><div id="engList"></div></article>
+                  <article><div class="panel-title"><span>FLT</span><b data-i18n="faultInfo">鏁呴殰淇℃伅</b></div><div id="fltList"></div></article>
+                  <article><div class="panel-title"><span>CMD</span><b data-i18n="lastCommand">鏈€杩戝懡任</b></div><div id="lcList"></div></article>
+                </div>
+              </details>
+            </section>
+          </div>
+        </section>
+
+        <section id="control" class="page">
+          <div class="control-layout">
+            <section class="panel plan-panel">
+              <div id="ctrlHint"></div>
+              <div class="panel-title"><span>手动</span><b>底盘手动控制</b></div>
+              <div class="hint-box">先用这里验证底盘链路。按钮会下发短脉冲运动命令，用来区分“导航没出速度”还是“底盘本身不响应”。</div>
+              <div class="manual-drive-panel">
+                <button class="btn-p manual-drive-btn" type="button" data-manual-intent="manual_drive_forward">前进</button>
+                <div class="manual-drive-row">
+                  <button class="btn-p secondary manual-drive-btn" type="button" data-manual-intent="manual_turn_left">左转</button>
+                  <button class="btn-p danger manual-drive-btn" type="button" data-manual-intent="manual_drive_stop">停止</button>
+                  <button class="btn-p secondary manual-drive-btn" type="button" data-manual-intent="manual_turn_right">右转</button>
+                </div>
+                <button class="btn-p manual-drive-btn" type="button" data-manual-intent="manual_drive_backward">后退</button>
+              </div>
+              <div class="panel-title"><span>任诲姟</span><b data-i18n="presetPlans">宸茶瀹氫换鍔¤鍒</b></div>
+              <div class="hint-box" id="offlinePlanHint"></div>
+              <div class="plan-grid" id="planGrid"></div>
+              <pre class="cmd-r" id="cmdResult" data-i18n="waitingPlan">绛夊緟涓嬪彂记″垝...</pre>
+            </section>
+            <aside class="panel custom-plan-card">
+              <div class="panel-title"><span>娴佺▼</span><b data-i18n="customComposite">鑷畾涔夊鍚堣鍒</b></div>
+              <div class="custom-plan-form">
+                <input id="customPlanName" data-i18n-ph="customNamePh" placeholder="渚嬪锛氬贰妫€鍚庢媿鐓у苟绮惧噯鍠锋磼" />
+                <label><input type="checkbox" value="start_patrol" class="custom-step" checked /><span data-i18n="stepPatrol">宸℃寤哄浘</span></label>
+                <label><input type="checkbox" value="capture_photo" class="custom-step" checked /><span data-i18n="stepPhoto">鎷嶇収鍥炰紶</span></label>
+                <label><input type="checkbox" value="read_sensors" class="custom-step" /><span data-i18n="stepSensors">璇诲彇浼犳劅鍣</span></label>
+                <label><input type="checkbox" value="start_spray" class="custom-step" /><span data-i18n="stepSpray">绮惧噯鍠锋磼</span></label>
+                <button class="btn-p" id="customPlanCreate" type="button" data-i18n="createCustom">鍒涘缓澶嶅悎记″垝</button>
+              </div>
+              <div class="reserve-result" id="customPlanResult"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="vehicle" class="page">
+          <div class="vehicle-layout">
+            <section class="panel vehicle-main-panel">
+              <div class="vehicle-hero">
+                <div>
+                  <div class="tb-kicker">AGV NAVIGATION</div>
+                  <h2 class="vehicle-hero-title" data-i18n="vehicleTitle">小车建图与路径规划</h2>
+                  <p class="vehicle-hero-desc" data-i18n="vehicleDesc">把建图、地图查看、路径规划和点位操作单独收进这一页，优先适配地瓜派X5轻量运行模式。</p>
+                </div>
+                <div class="vehicle-mode-card">
+                  <div class="vehicle-mode-label" data-i18n="vehicleDisplayMode">显示策略</div>
+                  <div class="vehicle-mode-switch" id="vehicleViewModeSwitch">
+                    <button type="button" class="vehicle-mode-btn active" data-vehicle-view="mapOnly" data-i18n="vehicleModeMapOnly">仅地图</button>
+                    <button type="button" class="vehicle-mode-btn" data-vehicle-view="intervalPose" data-i18n="vehicleModeInterval">低频位置</button>
+                    <button type="button" class="vehicle-mode-btn" data-vehicle-view="realtime" data-i18n="vehicleModeRealtime">实时模式</button>
+                  </div>
+                  <div class="vehicle-interval-switch hidden" id="vehiclePoseIntervalSwitch">
+                    <button type="button" class="vehicle-mode-btn active" data-vehicle-interval="3">3s</button>
+                    <button type="button" class="vehicle-mode-btn" data-vehicle-interval="5">5s</button>
+                    <button type="button" class="vehicle-mode-btn" data-vehicle-interval="10">10s</button>
+                  </div>
+                  <div class="vehicle-mode-hint" id="vehicleModeHint"></div>
+                </div>
+              </div>
+
+              <div class="vehicle-process-strip" id="vehicleProcessStrip"></div>
+
+              <div class="vehicle-stage-card">
+                <div class="panel-title"><span>MAP</span><b data-i18n="vehicleMapPanel">地图与位姿显示区</b></div>
+                <div class="vehicle-stage" id="vehicleStage"></div>
+              </div>
+
+              <div class="vehicle-bottom-grid">
+                <article class="panel vehicle-route-panel">
+                  <div class="panel-title"><span>PATH</span><b data-i18n="vehiclePathPanel">路径规划</b></div>
+                  <div id="vehicleRouteSummary"></div>
+                  <div id="vehicleRouteSteps" class="vehicle-route-steps"></div>
+                </article>
+                <article class="panel vehicle-point-panel">
+                  <div class="panel-title"><span>PTS</span><b data-i18n="vehiclePointPanel">点位管理</b></div>
+                  <div class="vehicle-point-capture-card">
+                    <div class="vehicle-point-capture-head">
+                      <div>
+                        <strong data-i18n="vehicleCurrentPoseTitle">当前车位</strong>
+                        <span data-i18n="vehicleCurrentPoseDesc">把小车开到目标位置后，直接保存当前车位为出发点或停车点。</span>
+                      </div>
+                      <div class="vehicle-pose-badge" id="vehiclePoseBadge">等待定位</div>
+                    </div>
+                    <div class="vehicle-live-pose" id="vehicleLivePose"></div>
+                    <div class="vehicle-capture-actions">
+                      <button class="btn-p secondary" type="button" id="vehicleSaveStartBtn" data-save-slot="start" data-i18n="vehicleSaveStart">设为出发点</button>
+                      <button class="btn-p secondary" type="button" data-save-slot="plant-1" data-i18n="vehicleSavePlant1">设为1号停车点</button>
+                      <button class="btn-p secondary" type="button" data-save-slot="plant-2" data-i18n="vehicleSavePlant2">设为2号停车点</button>
+                      <button class="btn-p secondary" type="button" data-save-slot="plant-3" data-i18n="vehicleSavePlant3">设为3号停车点</button>
+                      <button class="btn-p secondary" type="button" data-save-slot="plant-4" data-i18n="vehicleSavePlant4">设为4号停车点</button>
+                    </div>
+                    <div class="vehicle-capture-hint" id="vehicleCaptureHint"></div>
+                  </div>
+                  <div id="vehiclePointList" class="vehicle-point-list"></div>
+                </article>
+              </div>
+            </section>
+
+            <aside class="vehicle-side-column">
+              <section class="panel">
+                <div class="panel-title"><span>CTRL</span><b data-i18n="vehicleControlPanel">建图与定位控制</b></div>
+                <div class="vehicle-action-grid">
+                  <button class="btn-p" type="button" data-vehicle-intent="start_mapping" data-i18n="vehicleStartMapping">开始建图</button>
+                  <button class="btn-p secondary" type="button" data-vehicle-intent="start_localization" data-i18n="vehicleStartLocalization">启动定位</button>
+                  <button class="btn-p secondary" type="button" data-vehicle-intent="start_navigation_stack" data-i18n="vehicleStartNavigation">启动导航</button>
+                  <button class="btn-p secondary" type="button" data-vehicle-intent="cancel_navigation" data-i18n="vehicleCancelNavigation">取消导航</button>
+                </div>
+              </section>
+
+              <section class="panel">
+                <div class="panel-title"><span>MAN</span><b data-i18n="vehicleManualPanel">手动驾驶</b></div>
+                <div class="vehicle-manual-entry">
+                  <div class="vehicle-manual-entry-copy">
+                    <strong data-i18n="vehicleManualEntryTitle">独立驾驶台</strong>
+                    <span data-i18n="vehicleManualEntryDesc">默认隐藏，点击按钮后再打开手动驾驶界面。</span>
+                  </div>
+                  <button class="btn-p" type="button" id="vehicleManualOpenBtn" data-i18n="vehicleManualOpen">打开手动驾驶台</button>
+                </div>
+              </section>
+
+              <section class="panel">
+                <div class="panel-title"><span>AUTO</span><b data-i18n="vehiclePatrolPanel">自动巡检</b></div>
+                <div class="vehicle-patrol-card">
+                  <div class="vehicle-patrol-summary" id="vehiclePatrolSummary"></div>
+                  <div class="vehicle-patrol-actions">
+                    <button class="btn-p" type="button" id="vehicleAutoPatrolBtn" data-i18n="vehicleStartAutoPatrol">开始自动巡检</button>
+                    <button class="btn-p secondary" type="button" id="vehiclePreviewPatrolBtn" data-i18n="vehiclePreviewPatrol">预览巡检顺序</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="panel">
+                <div class="panel-title"><span>DEV</span><b data-i18n="vehicleDevicePanel">导航链路状态</b></div>
+                <div id="vehicleDeviceGrid" class="vehicle-device-grid"></div>
+              </section>
+
+              <section class="panel">
+                <div class="panel-title"><span>TIP</span><b data-i18n="vehicleStrategyPanel">部署建议</b></div>
+                <div id="vehicleStrategyList" class="vehicle-strategy-list"></div>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section id="coprocessor" class="page">
+          <div class="coprocessor-layout">
+            <section class="panel coprocessor-main-panel">
+              <div class="coprocessor-hero">
+                <div>
+                  <div class="tb-kicker">COPROCESSOR LIVE</div>
+                  <h2 class="vehicle-hero-title" data-i18n="coprocessorTitle">从核任务界面</h2>
+                  <p class="vehicle-hero-desc" data-i18n="coprocessorDesc">把当前从核执行任务、链路状态和最近回传单独收进这一页，不再混在总览里。</p>
+                </div>
+                <div class="coprocessor-metric-grid" id="coprocessorMetricGrid"></div>
+              </div>
+
+              <div class="coprocessor-banner" id="coprocessorBanner"></div>
+
+              <div class="coprocessor-main-grid">
+                <article class="panel">
+                  <div class="panel-title"><span>FLOW</span><b data-i18n="coprocessorFlowPanel">从核执行流程</b></div>
+                  <div class="coprocessor-step-list" id="coprocessorStepList"></div>
+                </article>
+
+                <article class="panel">
+                  <div class="panel-title"><span>MEDIA</span><b data-i18n="coprocessorMediaPanel">最近任务回传</b></div>
+                  <div class="coprocessor-media-grid">
+                    <div class="coprocessor-media-stage" id="coprocessorMediaStage"></div>
+                    <div class="coprocessor-media-info" id="coprocessorMediaInfo"></div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <aside class="coprocessor-side-column">
+              <section class="panel">
+                <div class="panel-title"><span>LINK</span><b data-i18n="coprocessorLinkPanel">从核链路面板</b></div>
+                <div class="coprocessor-link-grid" id="coprocessorLinkGrid"></div>
+              </section>
+
+              <section class="panel">
+                <div class="panel-title"><span>FEED</span><b data-i18n="coprocessorFeedPanel">任务记录流</b></div>
+                <div class="coprocessor-feed-list" id="coprocessorFeedList"></div>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section id="chat" class="page">
+          <div class="chat-layout panel">
+            <div class="chat-toolbar">
+              <div>
+                <div class="panel-title"><span>AI</span><b data-i18n="assistant">智能助手</b></div>
+                <p id="chatRuntimeHint">鍥寸粫椋炶吘娲剧幇鍦虹姸总併€佽鍒掕皟搴︿笌浼犳劅鍣ㄥ缓记繘琛屼氦浜掋€</p>
+              </div>
+              <div class="assistant-mode-panel">
+                <div class="chat-topline">
+                  <span class="chat-chip primary" id="chatAgentStatus">鍔╂墜待命</span>
+                  <span class="chat-chip">GLM-5.1</span>
+                  <span class="chat-chip" id="assistantModeBadge">自动模式</span>
+                </div>
+                <div class="assistant-mode-switch" id="assistantModeSwitch">
+                  <button type="button" class="assistant-mode-btn active" data-assistant-mode="auto" data-i18n="autoMode">自动模式</button>
+                  <button type="button" class="assistant-mode-btn" data-assistant-mode="manual" data-i18n="manualMode">鎵嬪姩妯″紡</button>
+                </div>
+                <p class="assistant-mode-hint" id="assistantModeHint">自动模式涓嬶紝澶фā鍨嬩細缁撳悎鐜板満淇℃伅鐩存帴鍐崇瓥骞朵笅鍙戝厑记哥殑任诲姟銆</p>
+              </div>
+            </div>
+
+            <div class="quick-prompts chat-prompts">
+              <button data-chat-example="鐜板湪鐜板満鎯呭喌总庝箞鏍凤紝鎷嶄竴寮犵収鐗囩粰鎴戠湅銆? data-i18n="quickScene">鏌ョ湅鐜板満</button>
+              <button data-chat-example="璇诲彇褰撳墠浼犳劅鍣ㄤ俊鎭苟缁欏嚭鍐滀笟浣滀笟寤鸿銆? data-i18n="quickSensors">浼犳劅鍣ㄥ缓记?/button>
+              <button data-chat-example="姣忛殧涓ゅ皬鏃惰繘琛屼竴娆″贰妫€寤哄浘銆? data-i18n="quickSchedule">记剧疆瀹氭椂宸℃</button>
+              <button data-chat-example="寮€濮嬬簿鍑嗗柗娲掕鍒掋€? data-i18n="quickSpray">寮€濮嬪柗娲?/button>
+            </div>
+
+            <div class="chat-main">
+              <div class="chat-msgs" id="chatHistory"></div>
+              <aside class="chat-side">
+                <section>
+                  <div class="panel-title"><span>SEN</span><b data-i18n="sensorSnapshot">浼犳劅鍣ㄥ揩鐓</b></div>
+                  <div id="chatSensorSnapshot"></div>
+                </section>
+                <section>
+                  <div class="panel-title"><span>TASK</span><b data-i18n="scheduleAndPlan">瀹氭椂任诲姟涓庤鍒掔姸总</b></div>
+                  <div id="scheduleList"></div>
+                  <div id="planStatusList" class="plan-status-list"></div>
+                </section>
+                <section class="assist-scope-section">
+                  <div class="panel-title"><span>AI</span><b data-i18n="assistScope">鍔╂墜宸ヤ綔鑼冨洿</b></div>
+                  <div id="assistantScope"></div>
+                </section>
+              </aside>
+            </div>
+
+            <div class="chat-ia">
+              <textarea id="chatInput" rows="2" data-i18n-ph="chatPh" placeholder="鍙互鑷劧鎻愰棶锛屼緥濡傦細褰撳墠娓╂箍搴﹂€傚悎鍠锋磼鍚楋紵"></textarea>
+              <button class="btn-p" id="chatSend" type="button" data-i18n="send">鍙戦€?/button>
+            </div>
+          </div>
+        </section>
+
+        <section id="arm" class="page">
+          <div class="arm-layout">
+            <section class="panel arm-main-panel">
+              <div class="panel-title"><span>VIS</span><b data-i18n="armTeachTitle">视觉抓取监看椤</b></div>
+              <div class="arm-hero" id="armHero">
+                <div class="arm-hero-copy">
+                  <div class="arm-hero-title" data-i18n="armTeachTitle">视觉抓取监看椤</div>
+                  <div class="arm-hero-desc" data-i18n="armTeachDesc">宸︿晶鏄剧ず鐩告満鏍囨敞鐢婚潰锛屽彸渚ф樉绀烘満姊拌噦褰撳墠浣嶇疆涓庢祦绋嬬姸总併€傝椤甸潰鍙敤浜庡睍绀哄拰鐩戠湅锛屼笉鎻愪緵鏈烘鑷傛帶鍒躲€</div>
+                </div>
+                <div class="arm-hero-tags">
+                  <span class="summary-tag" data-i18n="armReadonlyTag">鍙鐩戠湅</span>
+                  <span class="summary-tag" data-i18n="armGripperHint">7 杞翠负澶圭埅锛氭鍚戦棴鍚堬紝鍙嶅悜寮犲紑</span>
+                </div>
+              </div>
+
+              <div class="arm-monitor-grid">
+                <article class="arm-card arm-vision-card">
+                  <div class="panel-title"><span>CAM</span><b data-i18n="armVisionPanel">鐩告満鏍囨敞鐢婚潰</b></div>
+                  <div id="armCameraView" class="arm-camera-view"></div>
+                  <div id="armVisionMeta" class="arm-vision-meta"></div>
+                </article>
+
+                <article class="arm-card arm-state-card">
+                  <div class="panel-title"><span>POSE</span><b data-i18n="armPosePanel">鏈烘鑷傚疄鏃剁姸总</b></div>
+                  <div class="arm-pose-grid" id="armPoseGrid"></div>
+                  <div class="panel-title"><span>JNT</span><b data-i18n="armJointPanel">鍏宠妭鐘舵€</b></div>
+                  <div class="arm-joint-grid" id="armJointGrid"></div>
+                </article>
+              </div>
+
+              <div class="arm-bottom-grid">
+                <article class="arm-card">
+                  <div class="panel-title"><span>FLOW</span><b data-i18n="armWorkflow">鎶撳彇娴佺▼鐘舵€</b></div>
+                  <div class="arm-flow-list" id="armFlowList"></div>
+                </article>
+                <article class="arm-card">
+                  <div class="panel-title"><span>LOG</span><b data-i18n="armProtocolTitle">视嗚/鏈烘鑷備簨任舵棩蹇</b></div>
+                  <pre class="cmd-r arm-result" id="armResult" data-i18n="armResultWaiting">绛夊緟视嗚涓庢満姊拌噦鐘舵€?..</pre>
+                </article>
+              </div>
+            </section>
+
+            <aside class="panel arm-side-panel">
+              <div class="panel-title"><span>INFO</span><b data-i18n="armMonitorTitle">监看说明</b></div>
+              <div class="arm-protocol-list">
+                <div class="context-pill" data-i18n="armMonitorLine1">相机标注页用于展示目标识别画面与抓取流程状态。</div>
+                <div class="context-pill" data-i18n="armMonitorLine2">右侧状态区用于显示机械臂当前位置、关节信息与最近一次任务状态。</div>
+                <div class="context-pill" data-i18n="armMonitorLine3">控制操作放在单独的小面板中，不在本页主界面公开显示。</div>
+              </div>
+              <button class="arm-secret-entry" type="button" id="armSecretEntryBtn">机械臂实时状态显示</button>
+            </aside>
+          </div>
+        </section>
+
+        <div class="arm-secret-mask hidden" id="armSecretMask"></div>
+        <section class="arm-secret-panel hidden" id="armSecretPanel" aria-hidden="true">
+          <div class="panel-title"><span>CTRL</span><b>机械臂隐藏控制台</b></div>
+          <div class="arm-secret-note">该面板仅用于内部调试与状态校准，不出现在左侧导航页面。</div>
+
+          <div class="arm-secret-grid">
+            <article class="arm-secret-card">
+              <div class="panel-title"><span>BASE</span><b>基础动作</b></div>
+              <div class="arm-secret-actions">
+                <button class="btn-p secondary" type="button" id="armCtrlConnectBtn">连接机械臂</button>
+                <button class="btn-p secondary" type="button" id="armCtrlReadBtn">读取位置</button>
+                <button class="btn-p secondary" type="button" id="armCtrlSaveHomeBtn">保存复位点</button>
+                <button class="btn-p secondary" type="button" id="armCtrlGotoHomeBtn">回到复位点</button>
+                <button class="btn-p" type="button" id="armCtrlStopBtn">停止机械臂</button>
+              </div>
+            </article>
+
+            <article class="arm-secret-card">
+              <div class="panel-title"><span>FLOW</span><b>采摘流程点位</b></div>
+              <div class="arm-flow-actions">
+                <div class="arm-flow-step">
+                  <div class="arm-flow-copy">
+                    <b>步骤 1：复位点</b>
+                    <span class="arm-flow-state" id="armFlowHomeState">未设置</span>
+                    <span>复位完成后，在安全待机姿态保存。</span>
+                  </div>
+                  <div class="arm-inline-actions">
+                    <button class="btn-p secondary" type="button" id="armCtrlSaveHomeBtn2">设置复位点</button>
+                    <button class="btn-p" type="button" id="armCtrlGotoHomeBtn2">回到复位点</button>
+                  </div>
+                </div>
+
+                <div class="arm-flow-step">
+                  <div class="arm-flow-copy">
+                    <b>步骤 2：夹取点</b>
+                    <span class="arm-flow-state" id="armFlowPickState">未设置</span>
+                    <span>手动移动到果实夹取位置后保存。</span>
+                  </div>
+                  <div class="arm-inline-actions">
+                    <button class="btn-p secondary" type="button" id="armCtrlSavePickBtn">设置夹取点</button>
+                    <button class="btn-p" type="button" id="armCtrlGotoPickBtn">回到夹取点</button>
+                  </div>
+                </div>
+
+                <div class="arm-flow-step">
+                  <div class="arm-flow-copy">
+                    <b>步骤 3：放篮点</b>
+                    <span class="arm-flow-state" id="armFlowBasketState">未设置</span>
+                    <span>手动移动到篮子上方的放置位置后保存。</span>
+                  </div>
+                  <div class="arm-inline-actions">
+                    <button class="btn-p secondary" type="button" id="armCtrlSaveBasketBtn">设置放篮点</button>
+                    <button class="btn-p" type="button" id="armCtrlGotoBasketBtn">回到放篮点</button>
+                  </div>
+                </div>
+
+                <div class="arm-flow-finish">
+                  <div class="arm-flow-copy">
+                    <b>流程确认</b>
+                    <span id="armFlowSummary">请先完成复位点、夹取点、放篮点设置。</span>
+                  </div>
+                  <button class="btn-p" type="button" id="armCtrlFinishFlowBtn" disabled>完成一套流程</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="arm-secret-card">
+  <div class="panel-title"><span>JOG</span><b>七轴点动</b></div>
+  <label class="arm-field">
+    <span>统一点动角度</span>
+    <input id="armCtrlDeltaInput" type="number" step="0.5" min="0.1" value="5" />
+  </label>
+  <div class="arm-jog-grid" id="armJogGrid">
+    <div class="arm-jog-item">
+      <div class="arm-jog-head"><b>关节 1</b><span>电机 1</span></div>
+      <div class="arm-inline-actions">
+        <button class="btn-p secondary arm-jog-btn" type="button" data-joint="1" data-direction="neg">反向点动</button>
+        <button class="btn-p arm-jog-btn" type="button" data-joint="1" data-direction="pos">正向点动</button>
+      </div>
+    </div>
+    <div class="arm-jog-item">
+      <div class="arm-jog-head"><b>关节 2</b><span>电机 2</span></div>
+      <div class="arm-inline-actions">
+        <button class="btn-p secondary arm-jog-btn" type="button" data-joint="2" data-direction="neg">反向点动</button>
+        <button class="btn-p arm-jog-btn" type="button" data-joint="2" data-direction="pos">正向点动</button>
+      </div>
+    </div>
+    <div class="arm-jog-item">
+      <div class="arm-jog-head"><b>关节 3</b><span>电机 3</span></div>
+      <div class="arm-inline-actions">
+        <button class="btn-p secondary arm-jog-btn" type="button" data-joint="3" data-direction="neg">反向点动</button>
+        <button class="btn-p arm-jog-btn" type="button" data-joint="3" data-direction="pos">正向点动</button>
+      </div>
+    </div>
+    <div class="arm-jog-item">
+      <div class="arm-jog-head"><b>关节 4</b><span>电机 4</span></div>
+      <div class="arm-inline-actions">
+        <button class="btn-p secondary arm-jog-btn" type="button" data-joint="4" data-direction="neg">反向点动</button>
+        <button class="btn-p arm-jog-btn" type="button" data-joint="4" data-direction="pos">正向点动</button>
+      </div>
+    </div>
+    <div class="arm-jog-item">
+      <div class="arm-jog-head"><b>关节 5</b><span>电机 5</span></div>
+      <div class="arm-inline-actions">
+        <button class="btn-p secondary arm-jog-btn" type="button" data-joint="5" data-direction="neg">反向点动</button>
+        <button class="btn-p arm-jog-btn" type="button" data-joint="5" data-direction="pos">正向点动</button>
+      </div>
+    </div>
+    <div class="arm-jog-item">
+      <div class="arm-jog-head"><b>关节 6</b><span>电机 6</span></div>
+      <div class="arm-inline-actions">
+        <button class="btn-p secondary arm-jog-btn" type="button" data-joint="6" data-direction="neg">反向点动</button>
+        <button class="btn-p arm-jog-btn" type="button" data-joint="6" data-direction="pos">正向点动</button>
+      </div>
+    </div>
+    <div class="arm-jog-item">
+      <div class="arm-jog-head"><b>关节 7</b><span>夹爪</span></div>
+      <div class="arm-inline-actions">
+        <button class="btn-p secondary arm-jog-btn" type="button" data-joint="7" data-direction="neg">张开</button>
+        <button class="btn-p arm-jog-btn" type="button" data-joint="7" data-direction="pos">闭合</button>
+      </div>
+    </div>
+  </div>
+</article>
+          </div>
+
+          <pre class="cmd-r arm-result" id="armCtrlResult">等待隐藏控制台命令...</pre>
+        </section>
+
+        <section id="logs" class="page">
+          <div class="logs-layout">
+            <section class="panel log-summary-panel">
+              <div class="panel-title"><span>鍥為【</span><b data-i18n="runLogs">杩愯鏃ュ織</b></div>
+              <div class="log-summary-grid" id="logOverviewGrid"></div>
+              <div id="logInsightPanel"></div>
+            </section>
+            <section class="panel trend-panel">
+              <article>
+                <div class="panel-title"><span>鐜</span><b data-i18n="tempTrend">娓╂箍搴﹁秼鍔</b></div>
+                <canvas id="trendTemp" height="140"></canvas>
+              </article>
+              <article>
+                <div class="panel-title"><span>渚涚數</span><b data-i18n="energyTrend">鍏夌収涓庣數閲忚秼鍔</b></div>
+                <canvas id="trendEnergy" height="140"></canvas>
+              </article>
+            </section>
+            <section class="panel log-table-card">
+              <div class="panel-title"><span>记板綍</span><b data-i18n="runLogs">杩愯鏃ュ織</b></div>
+              <div class="lw">
+                <table class="lt">
+                  <thead>
+                    <tr>
+                      <th data-i18n="time">鏃堕棿</th>
+                      <th data-i18n="source">鏉ユ簮</th>
+                      <th data-i18n="command">鍛戒护</th>
+                      <th data-i18n="result">缁撴灉</th>
+                      <th data-i18n="level">绛夌骇</th>
+                      <th data-i18n="message">璇存槑</th>
+                    </tr>
+                  </thead>
+                  <tbody id="logTb"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="vehicle-manual-overlay" id="vehicleManualOverlay"></div>
+  <aside class="vehicle-manual-modal" id="vehicleManualModal" aria-hidden="true">
+    <div class="vehicle-manual-modal-head">
+      <div>
+        <div class="panel-title"><span>MAN</span><b data-i18n="vehicleManualPanel">手动驾驶</b></div>
+        <p class="vehicle-manual-console-desc" data-i18n="vehicleManualModalDesc">连接成功后默认不动作，手动启用后再进行低速点动、姿态调整和现场定点。</p>
+      </div>
+      <button class="drawer-close" type="button" id="vehicleManualCloseBtn" aria-label="close">×</button>
+    </div>
+
+    <div class="vehicle-manual-console">
+      <div class="vehicle-manual-console-column">
+        <div class="vehicle-manual-mode-card">
+          <div class="vehicle-manual-mode-copy">
+            <strong data-i18n="vehicleManualGateTitle">手动驾驶安全开关</strong>
+            <span id="vehicleManualModeDesc" data-i18n="vehicleManualGateDesc">连接成功后默认不动作，确认周围安全后再启用手动驾驶。</span>
+          </div>
+          <div class="vehicle-manual-mode-actions">
+            <span class="vehicle-manual-mode-pill off" id="vehicleManualModeLabel">手动未启用</span>
+            <button class="btn-p" type="button" id="vehicleManualEnableBtn" data-i18n="vehicleManualEnable">启用手动驾驶</button>
+            <button class="btn-p secondary" type="button" id="vehicleManualDisableBtn" data-i18n="vehicleManualDisable">退出手动驾驶</button>
+          </div>
+        </div>
+
+        <div class="vehicle-manual-runtime" id="vehicleManualRuntime"></div>
+
+        <div class="vehicle-manual-status-box">
+          <div class="vehicle-manual-status-title">执行回显</div>
+          <pre class="cmd-r vehicle-manual-result" id="vehicleCmdResult" data-i18n="vehicleCmdWaiting">等待小车任务操作...</pre>
+        </div>
+      </div>
+
+      <div class="vehicle-manual-console-column">
+        <div class="vehicle-manual-speed">
+          <label class="vehicle-manual-speed-label" for="vehicleManualRpmRange">
+            <span data-i18n="vehicleManualSpeed">行驶速度（RPM）</span>
+            <strong id="vehicleManualRpmText">12 RPM</strong>
+          </label>
+          <div class="vehicle-manual-speed-controls">
+            <input id="vehicleManualRpmRange" type="range" min="1" max="60" value="12" />
+            <input id="vehicleManualRpmInput" type="number" min="1" max="60" value="12" />
+          </div>
+        </div>
+
+        <details class="vehicle-manual-advanced" open>
+          <summary data-i18n="vehicleManualAdvanced">兼容原始命令</summary>
+          <div class="vehicle-manual-raw">
+            <input id="vehicleManualRawInput" type="text" value="status" />
+            <button class="btn-p secondary" type="button" id="vehicleManualRawSendBtn" data-i18n="vehicleManualRawSend">发送原始命令</button>
+          </div>
+          <div class="vehicle-manual-note" id="vehicleManualHint" data-i18n="vehicleManualHint">按住方向键会持续下发，松开后自动发送停车；空格键可立即停车。</div>
+        </details>
+      </div>
+
+      <div class="vehicle-manual-console-column vehicle-manual-console-drive">
+        <div class="vehicle-manual-control manual-disabled" id="vehicleManualControl">
+          <div class="vehicle-manual-pad-shell">
+            <div class="vehicle-manual-guard" id="vehicleManualGuard" data-i18n="vehicleManualGuard">未启用手动驾驶前，方向控制保持锁定。</div>
+            <div class="vehicle-manual-pad">
+              <div class="vehicle-manual-pad-gap"></div>
+              <button class="vehicle-manual-btn" type="button" data-manual-cmd="carfwd">
+                <span data-i18n="vehicleManualForward">前进</span>
+                <small>W / ↑</small>
+              </button>
+              <div class="vehicle-manual-pad-gap"></div>
+
+              <button class="vehicle-manual-btn" type="button" data-manual-cmd="carleft">
+                <span data-i18n="vehicleManualLeft">左转</span>
+                <small>A / ←</small>
+              </button>
+              <button class="vehicle-manual-btn stop" type="button" data-manual-cmd="carstop" data-manual-no-rpm="1">
+                <span data-i18n="vehicleManualStop">停止</span>
+                <small>Space</small>
+              </button>
+              <button class="vehicle-manual-btn" type="button" data-manual-cmd="carright">
+                <span data-i18n="vehicleManualRight">右转</span>
+                <small>D / →</small>
+              </button>
+
+              <div class="vehicle-manual-pad-gap"></div>
+              <button class="vehicle-manual-btn" type="button" data-manual-cmd="carback">
+                <span data-i18n="vehicleManualBack">后退</span>
+                <small>S / ↓</small>
+              </button>
+              <div class="vehicle-manual-pad-gap"></div>
+            </div>
+          </div>
+
+          <div class="vehicle-manual-action-row">
+            <button class="btn-p secondary" type="button" id="vehicleManualStopBtn" data-i18n="vehicleManualStopSend">发送停止</button>
+            <button class="btn-p secondary" type="button" id="vehicleManualStatusBtn" data-i18n="vehicleManualStatus">查询状态</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="drawerPanel">
+    <div class="drawer-hdr"><h3 data-i18n="settings">系统设置</h3><button class="drawer-close" id="drawerClose" type="button">关</button></div>
+    <div class="drawer-intro" data-i18n="settingsIntro">甯哥敤记剧疆淇濈暀鍦ㄥ墠闈紝鍏綉閮ㄧ讲鍜屾ā鍨嬫彁绀鸿瘝绛夌爺鍙戦厤缃敹鍦ㄩ珮绾ц缃噷銆</div>
+    <div class="dr-sec">
+      <h4 data-i18n="mqttSettings">MQTT 杩炴帴记剧疆</h4>
+      <div class="fg"><label class="fl" for="mqttBroker" data-i18n="broker">Broker 鍦板潃</label><input id="mqttBroker" placeholder="mqtt://broker.emqx.io:1883" /></div>
+      <div class="fg"><label class="fl" for="mqttTopicPrefix" data-i18n="topicPrefix">涓婚鍓嶇紑</label><input id="mqttTopicPrefix" placeholder="agri/digua_x5" /></div>
+      <div class="fg"><label class="fl" for="mqttClientId">Client ID</label><input id="mqttClientId" placeholder="upper-control-demo" /></div>
+      <button class="btn-p secondary" id="mqttSave" type="button" data-i18n="saveMqtt">淇濆瓨 MQTT 閰嶇疆</button>
+      <div class="reserve-result" id="mqttResult"></div>
+    </div>
+    <div class="dr-sec">
+      <h4 data-i18n="upperService">涓婁綅鏈烘湇鍔?/h4>
+      <div class="fg"><label class="fl" for="apiBase" data-i18n="backendUrl">鍚庣鍦板潃</label><input id="apiBase" placeholder="http://127.0.0.1:8765" /></div>
+      <div class="fg"><label class="fl" for="pollInterval" data-i18n="pollMs">鍒锋柊闂撮殧 (ms)</label><input id="pollInterval" type="number" value="2000" min="500" max="30000" /></div>
+    </div>
+    <button class="btn-p secondary advanced-toggle" id="advancedToggle" type="button" data-i18n="advancedSettings">鏄剧ず楂樼骇閰嶇疆</button>
+    <div class="advanced-sections hidden" id="advancedSections">
+      <div class="dr-sec">
+        <h4 data-i18n="publicReserve">鍏綉閮ㄧ讲澶囨棰勭暀</h4>
+        <div class="fg"><label class="fl" for="publicBaseUrl" data-i18n="publicDomain">鍏綉记块棶鍩熷悕</label><input id="publicBaseUrl" placeholder="https://farm-robot.example.com" /></div>
+        <div class="fg"><label class="fl" for="icpRecordNo" data-i18n="icpNote">澶囨鍙?/ 澶囨敞</label><input id="icpRecordNo" placeholder="鏆傛湭澶囨鍙暀绌? /></div>
+        <div class="fg">
+          <label class="fl" for="relayType" data-i18n="publicMode">鍏綉鎺ュ叆切瑰紡</label>
+          <select id="relayType">
+            <option value="">鏆備笉閫夋嫨</option>
+            <option value="cloud_server">浜戞湇鍔″櫒鍙嶅悜任ｇ悊</option>
+            <option value="mqtt">MQTT 娑堟伅涓户</option>
+            <option value="frp">FRP / 鍐呯綉绌块€</option>
+            <option value="direct_public_ip">鍏綉 IP 鐩磋繛</option>
+          </select>
+        </div>
+        <button class="btn-p secondary" id="deploymentSave" type="button" data-i18n="saveReserve">淇濆瓨棰勭暀淇℃伅</button>
+        <div class="reserve-result" id="deploymentResult" data-i18n="reserveOnly">鏈惎鐢紝任呴鐣欐帴鍙ｃ€</div>
+      </div>
+      <div class="dr-sec">
+        <h4 data-i18n="llmSettings">澶фā鍨?API 涓庢彁绀鸿瘝</h4>
+        <div class="fg"><label class="fl" for="llmEndpoint" data-i18n="apiEndpoint">API 鍦板潃</label><input id="llmEndpoint" /></div>
+        <div class="fg"><label class="fl" for="llmModel" data-i18n="modelName">妯″瀷鍚嶇О</label><input id="llmModel" /></div>
+        <div class="fg"><label class="fl" for="llmKey">API Key</label><input id="llmKey" type="password" data-i18n-ph="keyPh" placeholder="鐣欑┖鍒欎娇鐢ㄦ湇鍔＄榛樿瀵嗛挜" /></div>
+        <div class="fg"><label class="fl" for="llmPrompt" data-i18n="systemPrompt">绯荤粺鎻愮ず璇</label><textarea id="llmPrompt" rows="10"></textarea></div>
+        <button class="btn-p secondary" id="promptReset" type="button" data-i18n="resetPrompt">鎭㈠榛樿鎻愮ず璇?/button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="help-overlay" id="helpOverlay"></div>
+  <aside class="help-panel" id="helpPanel">
+    <div class="drawer-hdr"><h3 data-i18n="helpTitle">涓婁綅鏈轰娇鐢ㄥ府鍔?/h3><button class="drawer-close" id="helpClose" type="button">关</button></div>
+    <div class="help-section"><h4 data-i18n="helpLoginTitle">1. 鐧诲綍</h4><p data-i18n="helpLogin">榛樿璐﹀彿鍜屽瘑鐮佸潎涓?1111銆</p></div>
+    <div class="help-section"><h4 data-i18n="helpMqttTitle">2. MQTT 杩炴帴</h4><p data-i18n="helpMqtt">椋炶吘娲句笌涓婁綅鏈烘棤椤诲浜庡悓涓€ WiFi锛屽彧瑕侀兘鑳借闂悓涓€涓?MQTT Broker锛屽嵆鍙€氳繃涓婚涓户鍛戒护銆佺姸总併€佸浘鍍忓拰浼犳劅鍣ㄦ暟鎹€</p></div>
+    <div class="help-section"><h4 data-i18n="helpPlanTitle">3. 记″垝鎺у埗</h4><p data-i18n="helpPlan">椋炶吘娲炬湭杩炴帴鏃讹紝涓婁綅鏈轰笉浼氭樉绀哄懡任ゆ垚鍔燂紱杩炴帴鍚庡彲涓嬪彂棰勮记″垝鎴栧鍚堣鍒掋€</p></div>
+    <div class="help-section"><h4 data-i18n="helpSensorTitle">4. 智能助手</h4><p data-i18n="helpSensor">鍙互璇㈤棶娓╁害銆佹箍搴︺€佸厜鐓с€佺數閲忋€佽秼鍔跨瓑淇℃伅锛屽姪鎵嬩細璇诲彇浼犳劅鍣ㄥ苟缁欏嚭寤鸿銆</p></div>
+  </aside>
+
+  <script src="/app.js?v=20260503-coprocessor-1"></script>
+  <script src="/arm_page.js?v=20260503-coprocessor-1"></script>
+</body>
+
+</html>
+
+
+
+

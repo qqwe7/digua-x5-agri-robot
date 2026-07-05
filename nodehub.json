@@ -1,0 +1,15 @@
+{
+  "name": "digua-x5-agri-robot",
+  "display_name": "地瓜派X5农业机器人",
+  "version": "1.0.0",
+  "platform": [
+    "RDK X5",
+    "地瓜派 X5"
+  ],
+  "type": "project-node",
+  "entrypoints": {
+    "run": "scripts/start_x5_controller.sh",
+    "check": "scripts/check_x5_runtime.py"
+  },
+  "source": "converted from jichuang_技术数据代码提交包_20260505.zip"
+}

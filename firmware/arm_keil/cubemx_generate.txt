@@ -1,0 +1,3 @@
+config load D:\jichuang\???_keil\robot.ioc
+project generate
+exit
